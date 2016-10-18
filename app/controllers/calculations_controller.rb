@@ -11,13 +11,21 @@ class CalculationsController < ApplicationController
     # ================================================================================
 
 
-    @character_count_with_spaces = "Replace this string with your answer."
+    @character_count_with_spaces = @text.length
 
-    @character_count_without_spaces = "Replace this string with your answer."
+    @character_count_without_spaces = @text.gsub(/\s+/, "").length
 
-    @word_count = "Replace this string with your answer."
+    word_array = @text.split(' ')
 
-    @occurrences = "Replace this string with your answer."
+    @word_count = word_array.length
+
+    @occurrences = 0
+
+    word_array.each do |word|
+      if @special_word == word
+        @occurrences += 1
+      end
+    end
 
     # ================================================================================
     # Your code goes above.
@@ -37,9 +45,13 @@ class CalculationsController < ApplicationController
     # The number of years the user input is in the integer @years.
     # The principal value the user input is in the decimal @principal.
     # ================================================================================
-
-    @monthly_payment = "Replace this string with your answer."
-
+    rate = @apr/12/100
+    months = @years*12
+    if rate == 0
+      @monthly_payment = (@principal/months)
+    else
+      @monthly_payment = ((rate*@principal*(1+rate)**months)/((1+rate)**months - 1))
+    end
     # ================================================================================
     # Your code goes above.
     # ================================================================================
@@ -60,12 +72,12 @@ class CalculationsController < ApplicationController
     #   number of seconds as a result.
     # ================================================================================
 
-    @seconds = "Replace this string with your answer."
-    @minutes = "Replace this string with your answer."
-    @hours = "Replace this string with your answer."
-    @days = "Replace this string with your answer."
-    @weeks = "Replace this string with your answer."
-    @years = "Replace this string with your answer."
+    @seconds = @ending - @starting
+    @minutes = (@seconds / 60)
+    @hours = (@minutes / 60)
+    @days = (@hours / 24)
+    @weeks = (@days / 7)
+    @years = (@days / 365.25)
 
     # ================================================================================
     # Your code goes above.
@@ -82,27 +94,78 @@ class CalculationsController < ApplicationController
     # The numbers the user input are in the array @numbers.
     # ================================================================================
 
-    @sorted_numbers = "Replace this string with your answer."
+    @sorted_numbers = @numbers.sort
 
-    @count = "Replace this string with your answer."
+    @count = @sorted_numbers.length
 
-    @minimum = "Replace this string with your answer."
+    @minimum = @sorted_numbers[0]
 
-    @maximum = "Replace this string with your answer."
+    @maximum = @sorted_numbers[@count-1]
 
-    @range = "Replace this string with your answer."
+    @range = @maximum - @minimum
 
-    @median = "Replace this string with your answer."
+    if @count.even?
+      @median = (@sorted_numbers[@count/2] + @sorted_numbers[@count/2 - 1])/2
+    else
+      @median = @sorted_numbers[@count/2 - 0.5]
+    end
 
-    @sum = "Replace this string with your answer."
+    @sum = 0
+    @sorted_numbers.each do |num|
+      @sum += num
+    end
 
-    @mean = "Replace this string with your answer."
 
-    @variance = "Replace this string with your answer."
+    @mean = @sum / @count
 
-    @standard_deviation = "Replace this string with your answer."
+    varsum = 0
+    @sorted_numbers.each do |num|
+      varsum += (num - @mean)**2
+    end
+    @variance = varsum / @count
 
-    @mode = "Replace this string with your answer."
+    @standard_deviation = Math.sqrt(@variance)
+
+    num_counts = Hash.new(0)
+
+    @sorted_numbers.each do |num|
+      num_counts[num] += 1
+    end
+
+    @mode = @sorted_numbers[0]
+    @sorted_numbers.each do |num|
+      if num_counts[@mode] < num_counts[num]
+        @mode = num
+      end
+    end
+
+    # num_counts = @sorted_numbers.map { |count|
+    #   count = 0
+    #
+    # }
+
+    # num_counts = Array.new
+    #
+    # i = 0
+    # @sorted_numbers.each do |num|
+    #   num_counts[i] = {number: num, count: 0}
+    #   i += 1
+    # end
+    #
+    # i = 0
+    # j = 0
+    # @sorted_numbers.each do |num|
+    #   num_counts.each do
+    #     if num_counts.keys[j] == num
+    #       num_counts.values[j] += 1
+    #     end
+    #     j += 1
+    #   end
+    # end
+    #
+    # sorted_num_counts = num_counts.sort {|numwithcount| numwithcoun[:count]}
+    #
+    # @mode = sorted_num_counts[sorted_num_counts.length-1][:number]
 
     # ================================================================================
     # Your code goes above.
