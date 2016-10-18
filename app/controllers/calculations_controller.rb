@@ -22,7 +22,7 @@ class CalculationsController < ApplicationController
     @occurrences = 0
 
     word_array.each do |word|
-      if @special_word == word
+      if @special_word.downcase == word.downcase
         @occurrences += 1
       end
     end
